@@ -1,0 +1,128 @@
+1. remove duplicates in a query response:
+  sql.openConnection()
+  unique_post_ids = sql.performQuery(SELECT DISTINCT post_id FROM comment)
+  sql.closeConnection()
+
+  posts = Post.all
+  posts.uniq
+
+2. filter records using inequalities, pattern matching, ranges, and boolean logic:
+  #inequality
+    sql.openConnection()
+    inequality = sql.performQuery(SELECT * FROM post WHERE id == 2;)
+    sql.closeConnection()
+
+    posts = Post.all
+    matches = []
+    posts.each do |post|
+      if post.id == 2
+        matches << post
+      end
+    end
+    matches
+
+  #pattern matching
+    sql.openConnection()
+    inequality = sql.performQuery(SELECT * FROM user WHERE name LIKE ‘r%’;)
+    sql.closeConnection()
+
+    user = User.all
+    user.pattern_match(‘r’)
+
+  #ranges
+    sql.openConnection()
+    range = sql.performQuery(SELECT * FROM post WHERE id BETWEEN 1 AND 2;)
+    sql.closeConnection()
+
+    posts = Post.all
+    matches = []
+    posts.each do |post|
+      if post.id < 2
+        matches << post
+      end
+    end
+    matches
+
+  #boolean logic
+    sql.openConnection()
+    bool = sql.performQuery(SELECT * FROM post WHERE id == 1 OR id == 2;)
+    sql.closeConnection()
+
+    posts = Post.all
+    matches = []
+    posts.each do |post|
+      if post.user_id == 1 || post.user.id == 2
+        matches << post
+      end
+    end
+    matches
+
+3.sort records in a particular order:
+	sql.openConnection()
+	order =  sql.performQuery(SELECT * FROM post ORDER BY user_id ASC LIMIT 10;)
+	sql.closeConnection()
+
+	posts = Post.all
+	posts.sort_by! do |post|
+		post.user_id
+	end
+
+4.limit the number of records returned:
+  sql.openConnection()
+  order = sql.performQuery(SELECT * FROM post ORDER BY id ASC LIMIT 3;)
+  sql.closeConnection()
+
+  posts = Post.all
+  (0..2).each do |num|
+    puts posts[num]
+  end
+
+5.group records into sections:
+  sql.openConnection()
+  group = sql.performQuery(SELECT user_id, COUNT(user_id) FROM post GROUP BY user_id;)
+  sql.closeConnection()
+
+  posts = Post.all
+  posts.group_by |post|
+    post.user_id
+  end
+
+6.perform calculations using aggregate functions:
+  sql.openConnection()
+  sum = sql.performQuery(SELECT sum(user_id) FROM post WHERE user_id > 0;)
+  sql.closeConnection()
+
+  posts = Post.all
+  posts.sum do |post|
+    post.user_id
+  end
+
+7. join tables using cross join, inner join, and outer join:
+  #cross join, Assuming these two have no relation at all. In this scenario topics has an: (id, title)
+  sql.openConnection()
+  sum = sql.performQuery(SELECT albums.name, albums.year, artists.name FROM albums, artists;)
+  sql.closeConnection()
+  posts = Post.all
+  topics = Topics.all
+
+  cross_join(posts, topics)
+
+  #inner join
+  sql.openConnection()
+  inner = sql.performQuery(SELECT * FROM albums JOIN artists ON albums.artist_id = artists.id;)
+  sql.closeConnection()
+
+  posts = Post.all
+  users = User.all
+
+  inner_join(posts,users)
+
+  #outer join
+  sql.openConnection()
+  outer = sql.performQuery(SELECT * FROM albums LEFT JOIN artists ON albums.artist_id = artists.id;)
+  sql.closeConnection()
+
+  posts = Post.all
+  users = User.all
+
+  outer_join(posts,users)
