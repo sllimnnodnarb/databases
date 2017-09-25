@@ -1,0 +1,45 @@
+1.Given the values table below, which data types and meanings are the same? Which are different?
+    Chen, Jones Viola Davis are all types of data that are 'strings', and thus the same.  42 is an integer so it would be different.
+
+2.Explain in your own words when a database might be used. Explain when a text file might be used.
+    A database would be used to store data that needed to be created, edited, accessed, saved, or deleted. An example could be an address book.  A text file would be used when only dealing with a single file with a single type of data in it.  For instance, to submit this assignment for review.
+
+3.Describe one difference between SQL and other programming languages.
+    SQL does not use == to check for value and type as you would find in Ruby or Javascript.
+    It assumes type and then verifies value.
+
+4.In your own words, explain how the pieces of a database system fit together at a high level.
+    In a table form.  The system is simply an accessible table that can be created, read, updated, and deleted.  It is a necessary component of managing application data from the point of resource management, to user sign-up, to whatever the purpose is of the application.
+
+5.Explain the meaning of table, row, column, and value.
+    A table is by definition composed of rows, columns, at the intersection of which blocks form that would be described as cells, and in the context here a certain object or value contained therein.
+    Rows, run horizontally across the table specifying criterion of the contents of each cell in the row, and columns run vertically adding additional criterion to the contents of each cell.  The cell is the result of the two based on confines of the construct of the table.
+
+6.List 3 data types that can be used in a table.
+    String, integer, object
+
+7.Given the payments table below, answer the following questions:
+  What is the result, if we select all the dates and amounts?
+    date     amount
+    5/1/17   1500.00
+    5/10/17  37.00
+    5/15/16  124.93
+    5/23/17  54.72
+  What is the result, if we select all amounts greater than 500?
+    1500.00
+  What is the result, be if we select all purchases made at Mega Foods?
+    5/15/17 Mega Foods 124.93 Groceries
+
+8.Given the users table below, write the following SQL queries and their results:
+  Select the email and sign-up date for the user named DeAndre Data.
+    SELECT email, signup
+    FROM users
+    WHERE name = 'DeAndre Data'
+  Select the user ID for the user with email 'aleesia.algorithm@uw.edu'.
+    SELECT userid
+    FROM users
+    WHERE email = 'aleesia.algorithm@uw.edu'
+  Select all the columns for the user ID equal to 4.
+    SELECT *
+    FROM users
+    WHERE userid = 4
