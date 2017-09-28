@@ -1,0 +1,56 @@
+1.Write out a generic SELECT statement.
+  SELECT name
+  FROM address_book
+  WHERE name LIKE '%John Calvin%'
+
+2.Create a fun way to remember the order of operations in a SELECT statement, such as a mnemonic.
+  The order is SELECT FROM WHERE <condition>
+  In your automobile, (most have air-conditioning or at very least a dial that used to control the air-conditioning), the air-conditioning selector is a potentiometer/dial, so as the dial is turned clockwise and increasing change in either temperature or air-force is to be expected.  The dial must first know a reference point to begin with ie: the OFF position.  Adjusting the air conditioning in your automobile is not unlike the logical operations of a SELECT statement.  It goes like this in pseudo code:
+    SELECT temperature
+    FROM temp_range
+    WHERE temp=72
+
+  That's a sort of drawn out way that is technically pneumonic, otherwise if you are looking for an acronym I like SFW, Special Forces Where... The Special Forces branches of the military operate in a covert manner, so it registers in the mind as 'Special Forces, Where?'  The answer being that those without clearance will not know if the mission is executed properly.  Then you remember SFW and remember the purpose of the acronym which is to remember the order of a SELECT statement, SELECT FROM WHERE.
+
+3.Create a pets database. Create a dogs table using this file. From the dogs table with the columns id, name, gender, age, weight, intake_date, breed, and in_foster, write statements to select the following pieces of data.
+  Display the name, gender, and age of all dogs that are part Labrador.
+
+  Display the ids of all dogs that are under 1 year old.
+
+  Display the name and age of all dogs that are female and over 35lbs.
+
+  Display all of the information about all dogs that are not Shepherd mixes.
+
+  Display the id, age, weight, and breed of all dogs that are either over 60lbs or Great Danes.
+    Intake teams typically guess the breed of shelter dogs, so the breed column may have multiple words (for example, "Labrador Collie mix").
+
+4.From the cats table below, what pieces of data would be returned from these queries?
+  SELECT name, adoption_date FROM cats;
+    all values in the name and adoption_date columns in the cats table
+  SELECT name, age FROM cats;
+    all values in the name and age columns in the cats table
+
+5.From the cats table, write queries to select the following pieces of data.
+  Display all the information about all of the available cats.
+    SELECT * FROM cats;
+  Choose one cat of each age to show to potential adopters.
+    SELECT * FROM cats WHERE adoption_date=nil;
+  Find all of the names of the cats, so you don’t choose duplicate names for new cats.
+    SELECT name FROM cats;
+
+6.List each comparison operator and explain, in your own words, when you would use it. Include a real world example for each.
+  =   equal to, name='John';
+  <   less than, weight<50;
+  <=  less than or equal to, height<=50;
+  >   greater than, depth>50;
+  >=  greater than or equal to, breadth >=50;
+  <>  is not equal, name<>'John';
+  !=  is not equal, age!=50;
+
+7.From the cats table (problem 4), what data would be returned from these queries?
+  SELECT name FROM cats WHERE gender = ‘F’;
+    the rows including cats with the gender='f', seashell and nala are their names
+  SELECT name FROM cats WHERE age <> 3;
+    all rows except for Azul who has an age of 3
+  SELECT ID FROM cats WHERE name != ‘Mushi’ AND gender = ‘M’;
+    the two ids containing Victoire and Mushi
