@@ -1,0 +1,146 @@
+1.  How do you find data that is held in two separate data tables?
+  By using the JOIN clause
+
+2.  Explain, in your own words, the difference between a CROSS JOIN, INNER JOIN, LEFT OUTER JOIN, RIGHT OUTER JOIN, and FULL OUTER JOIN. Give a real world example for each.
+  The difference between and CROSS JOIN and INNER JOIN is that the inner joins combines some information form each of the tables based on a given condition, whereas a CROSS JOIN will give every single possible combination based on the content from each table.  An INNER JOIN example might be joining a cattle table with ranches table to only get the desired information of a particular cow's birthweight, age, breed, and ranch it was born at, excluding the cow's color and height and excluding the ranch address and phone number. A cross join would be joining the cattle and ranches table resulting in a massive table of all of the info including the cow's color and height and the ranch address and phone number as well.
+
+  On a LEFT OUTER JOIN, after the INNER JOIN occurs disqualifying rows that do not meet the conditions are not excluded, but instead assigned a null value for table 2 columns if they belong to table 1.  Using the cattle and ranches example, wild cattle that were not born on a ranch would receive a null value under the ranch name column.
+
+  With a RIGHT OUTER JOIN, if a row in table 2 does not meet the conditions then the column receives null values as applicable.  For instance, if the ranch table stays in tact, then the cattle table containing cows born would add null values for ranches with no cattle yet born, or ranches that deal with horses, or whitetail deer instead.
+
+  A FULL OUTER JOIN adds null values for each of the columns in table 1 AND table 2 as applicable without giving preference to the right or left table.  This would include all cattle table data with null values for will caught cattle, and all ranches regardless of whether they herd cattle.
+
+3.  Define primary key and foreign key. Give a real world example for each.
+  A primary key is an identifier for each row in a the foremost table, and the foreign key is a secondary key of sorts to any other table that has been joined to the primary table.  If you joined the cattle and ranches keys cattle_id would be the primary key relative to the cattle table but the foreign key relative to any other table.
+
+4.  Define aliasing.
+  After joining a table you can differentiate which column belongs to which table by simply abbreviating the primary table name.  For a cow on a given ranch it might be c.ranch, or for a ranch with a given cow it would look like r.cow.  It is essentially just a shorthand way to organize and classify table data.
+
+5.  Change this query so that you are using aliasing:
+  SELECT professor.name, compensation.salary, compensation.vacation_days FROM professor JOIN compensation ON professor.id = compensation.professor_id;
+    SELECT p.name, c.salary, c.vacation_days FROM professor AS p JOIN compensation AS c ON p.id = c.p_id;
+
+6.  Why would you use a NATURAL JOIN? Give a real world example.
+  A NATURAL JOIN is not the same as NATURAL LIGHT.  That is an alcoholic beverage consumed by many ranch hands industry-wide, and tastes awful.  Instead a NATURAL JOIN includes columns from tables during the JOIN that occur in both tables.  It includes no null values.  It is a table that naturally makes sense because the categories are already classified the same on both tables.
+  Joining cattle and ranches would exclude phone number and address but include ranch name.
+
+7.  Build an Employees table and a Shifts table with appropriate primary and foreign keys. Then, write queries to find the following information:
+  List all employees and all shifts.
+      Employees
+      id |  name   | shift_id
+      ----+---------+----------
+      1 | Adam    |
+      2 | Brandon |
+      3 | Cyle    |
+      (3 rows)
+
+      shifts
+      id | start | finish | employee_id
+      ----+-------+--------+-------------
+      10 | 6am   | 6pm    |
+      20 | 6pm   | 6am    |
+      30 | off   | off    |
+      (3 rows)
+
+  Create a list of all possible schedules.
+      id |  name   | shift_id | id | start | finish | employee_id
+     ----+---------+----------+----+-------+--------+-------------
+       1 | Adam    |          | 10 | 6am   | 6pm    |
+       1 | Adam    |          | 20 | 6pm   | 6am    |
+       1 | Adam    |          | 30 | off   | off    |
+       2 | Brandon |          | 10 | 6am   | 6pm    |
+       2 | Brandon |          | 20 | 6pm   | 6am    |
+       2 | Brandon |          | 30 | off   | off    |
+       3 | Cyle    |          | 10 | 6am   | 6pm    |
+       3 | Cyle    |          | 20 | 6pm   | 6am    |
+       3 | Cyle    |          | 30 | off   | off    |
+     (9 rows)
+
+8.  Given the Dogs table (described below), the Adoptions table (described below), the Adopters table (which has the columns first_name, last_name, address, and phone number), and the Volunteers table (which has the columns id, name, address, phone_number, available_to_foster, and foster_id), please write queries to retrieve the following information.
+  Create a list of all volunteers. If the volunteer is fostering a dog, include each dog as well.
+       name   | pet_name
+      ---------+----------
+      Adam    | Rosco
+      Cyle    | Boujee
+      Brandon |
+
+  List the adopter’s name and the pet’s name for each animal adopted within the past month to be displayed as a ‘Happy Tail’ on social media.
+      first_name | last_name | pet_name
+      ------------+-----------+----------
+      Chris      | Douglas   | Rosco
+      David      | Smith     | Boujee
+
+  Create a list of adopters who have not yet chosen a dog to adopt and generate all possible combinations of adopters and available dogs.
+
+      id |  name   |          address          | phone_number | available_to_foster | foster_id
+      ----+---------+---------------------------+--------------+---------------------+-----------
+      2 | Cyle    | 2 Two Winds Twotown Texas | 2222222222   | no                  |        22
+      3 | Brandon | 3 Three Street Tri Texas  | 3333333333   | no                  |        33
+
+  Display a list of all cats and all dogs who have not been adopted.
+        name   |  name
+      ----------+--------
+               | Boujee
+               | Rosco
+      Nala     | Ranger
+      Seashell |
+
+  Create a list of volunteers who are available to foster. If they currently are fostering a dog, include the dog. Also include all dogs who are not currently in foster homes.
+         adopter    |  dog   |  name
+      --------------+--------+--------
+                    |        | Ranger
+      David Smith   | Boujee |
+      Chris Douglas | Rosco  |
+
+9.  Write a query to find the name of the person who adopted Seashell given the tables Cats (depicted below), Adoptions (depicted below), and Adopters which has columns for id, address, phone number, and name.
+  Dogs table has the columns id, name, gender, age, weight, intake_date, breed, and in_foster.
+  NOTE: Shelter dogs’ breeds are typically guessed by the intake team, so the column may have multiple words. I.E. labrador collie mix
+  Cats table has the columns id, name, gender, age, intake_date, adoption_date
+  Adoptions table has the columns id, adopter, cat, dog, fee, date
+
+    SELECT adoptions.adopter FROM adoptions FULL OUTER JOIN cats ON adoptions.id = cats.id WHERE adoptions.date=cats.adoption_date;
+
+    Seashell is yet to be adopted.
+
+10.  Given the tables Books (isbn, title, author), Transactions(id, checked_out_date, checked_in_date, user_id, isbn), Holds(id, isbn, user_id, rank, date), and Patrons(id, name, fine_amount), write queries to find the following information:
+  To discern if the library should buy more copies of a given book, please provide the names and position, in order, of all of the patrons waiting in line for Harry Potter and the Sorcerer’s Stone.
+          name     | rank
+      --------------+------
+      Adam Smith   |    1
+      Dexter Smith |    2
+      Elgin Smith  |    4
+
+  Make a list of all book titles and denote whether or not a copy of that book is checked out.
+        title                                  | checked_out_date
+      -----------------------------------------+------------------
+      Eloquent Ruby                            |
+      JavaScript: The Good Parts               |
+      Designing Object-Oriented Software       |
+      Practical Object-Oriented Design in Ruby |
+      Harry Potter and the Sorcerer's Stone    | 2017-01-21
+      Harry Potter and the Sorcerer's Stone    | 2017-01-01
+
+  In an effort to learn which books take longer to read, the librarians would like you to create a list of total checked out time by book name in the past month.
+        id | checked_out_date | checked_in_date | user_id | isbn
+       ----+------------------+-----------------+---------+------
+       (0 rows)
+
+       There were no books checked out in the past month.
+
+
+  In order to learn which items should be retired, make a list of all books that have not been checked out in the past 5 years.
+        title                   | checked_out_date
+      ------------------------------------------+------------------
+      Eloquent Ruby                            |
+      JavaScript: The Good Parts               |
+      Designing Object-Oriented Software       |
+      Practical Object-Oriented Design in Ruby |
+
+  List all of the library patrons. If they have one or more books checked out, correspond the books to the patrons.
+        id |     name     | fine_amount
+       ----+--------------+-------------
+         1 | Adam Smith   |           0
+         2 | Bryan Smith  |           0
+         3 | Chad Smith   |           0
+         4 | Dexter Smith |           0
+         5 | Elgin Smith  |           0
