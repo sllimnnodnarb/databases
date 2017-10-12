@@ -1,0 +1,37 @@
+1.Create a database for the model we built in the example. Create a SQL file that creates the tables and inserts sample data (the questions below will help you create the data). Write queries that demonstrate the following scenarios:
+  Find a guest who exists in the database and has not booked a room.
+    SELECT * FROM guests WHERE room_number IS NULL;
+
+  Find bookings for a guest who has booked two rooms for the same dates.
+    SELECT guests.name, bookings.check_in_date FROM guests JOIN bookings ON guests.id = bookings.id;
+
+  Find bookings for a guest who has booked one room several times on different dates.
+    SELECT bookings.* FROM bookings JOIN rooms ON bookings.id = rooms.id AND bookings.check_in_date = rooms.check_in_date AND bookings.guest_name = rooms.guest_name;
+
+  Count the number of unique guests who have booked the same room.
+    SELECT COUNT(DISTINCT bookings.guest_name) AS booked_same_room FROM bookings JOIN rooms ON bookings.id = rooms.id AND bookings.room_number = rooms.room_number;
+
+2.Design a data model for students and the classes they have taken. The model should include the students' grades for a given class.
+  Work through the questions from the example above.
+
+  Document any assumptions you make about what data should be stored, what data types should be used, etc., and include them in a text file.
+  Necessary columns including to create practical PK and FK to asociate a student with a class in the form of a student_record(transcript), see link to image below.
+
+  Ask questions of your mentor if you are unsure about parts of your model.
+
+  Draw the model using the notation used in the checkpoint and submit a picture. You can also use a tool like StarUML or quickdatabasediagrams.com if you choose.
+
+  https://drive.google.com/open?id=0Bzr-P_q3xS7VSjBpcmd2RUtyQVE
+
+3.Build a database for the students/classes data model. Create a SQL file that creates the tables and inserts sample data (the questions below will help you create the data). Write queries that demonstrate the following scenarios:
+  Find all students who have taken a particular class.
+    SELECT registrations.student_name FROM registrations JOIN courses ON courses.id = registrations.id AND registrations.course_number = courses.course_number;
+
+  Count the number of each grade (using letter grades A-F) earned in a particular class.
+    SELECT COUNT(DISTINCT course_grade) FROM grades WHERE course_name = 'Bloc';
+
+  Find class names and the total number of students who have taken each class in the list.
+    SELECT SUM(attempt) AS total_enrollements, course_name FROM registrations GROUP BY course_name;
+
+  Find the class taken by the largest number of students.
+    SELECT SUM(attempt) AS total_enrollments, registrations.course_name FROM registrations GROUP BY registrations.course_name  ORDER BY total_enrollments DESC LIMIT 1;
