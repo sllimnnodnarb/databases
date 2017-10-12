@@ -1,0 +1,61 @@
+1.In your own words, explain the benefits of normalization. Include a real-world scenario where normalization is necessary.
+  Normalization makes tables more logical and searchable.  Normalization is most profitable for the purpose of writing data.
+  Storing users and payment information would be one example.  The data could be kept in a single table if the primary function of the database is to be written to.
+  The downfall of that single table is that in the event that it scales very large, and complex queries have to be run, it would be better to undergo normalization for readability performance.
+
+2.List and explain the different normal forms and how they relate to one another, with regard to your real-world scenario in the first question.
+  1NF is there cannot be duplicate data.  Continuing with the example I provided in question#1, a user cannot have two email addresses contained in a single row.  The user would have to create an additional account to include the separate email address.
+
+  2NF is that after the primary key, no other column can be dependent on a single subset.  For instance, the payment information is dependent on the customer name, and the email address is dependent on the customer name.  This should not be the case to comply with NF, there would be separate tables to be 2NF with single values per row.  Each table would be user_info or payment_info or something of the sort.
+
+  3NF includes that there can be no interrelation between a tertiary column to a primary column.  If C is dependent on B, and B is dependent on A, then C is dependent on A.  This would disqualify the data as being 3NF.  At the 3 NF you begin to really create a number of smaller concise tables, and the liklihood of insertion or update errors increases dramatically.  Again, for readability sake though, this increasing normalization is profitable.  Here we could separate the customer information into multiple tables with such as user, addresses, payments in order to prevent a tertiary column such as the payment address being dependent on the primary key.
+
+  Boyce Codd NF maintains that each dependency must be a superkey.  That is, that if some column is dependent in any way on another column, that which another is dependent upon must become the primary key.  It is difficult to image where a table like this could get very large at all because of the complexity of interdependencies in the world.  In this case again the customers table would be segmented further such as street number depending on a street name, and street name depending on city, and zip_code dependent upon city, etc.  Of course, with each increasing step of normalization all lower degrees of normalization apply cumulatively.
+
+3.The following student_records table shows the students and their grades in different subjects. The table is already in first normal form (1NF). Convert this table to the third normal form (3NF) using the techniques you learned in this checkpoint.
+
+  students_table
+  |student_id | student_name | student_email          |
+  |-----------+--------------+------------------------|
+  |1          |John B        |johnb20@hogwarts.edu    |
+  |2          |Sarah S       |sarah.s20@hogwarts.edu  |
+  |3          |Martha L      |martha.l20@hogwarts.edu |
+  |4          |James G       |james.g20@hogwarts.edu  |
+  |5          |Stanely P     |stanley.p20@hogwarts.edu|
+
+  professors_table
+  |professor_id| professor_name |
+  |------------+----------------|
+  |1           |John B          |
+  |2           |Sarah S         |
+  |3           |Martha L        |
+  |4           |James G         |
+  |5           |Stanely P       |
+
+  subjects_table
+  |subject_id | subject    |
+  |-----------+------------|
+  |1          |Philosophy  |
+  |2          |Economics   |
+  |3          |Mathematics |
+  |4          |James G     |
+  |5          |Stanely P   |
+
+  grades_table
+  |grade_id |student_name |subject    |grade |
+  |---------+-------------+-----------+------|
+  |1        |John B       |Philosophy |A     |
+  |2        |John B       |Economics  |A     |
+  |3        |John B       |Mathematics|D     |
+  |4        |Sarah S      |Philosophy |B     |
+  |5        |Sarah S      |Economics  |A     |
+
+
+4.In your own words, explain the potential disadvantages of normalizing the data above. What are its trade-offs? Discuss this with your mentor.
+  I believe I sufficiently explained this between my answers above and the meeting with my mentor on 10-12-17 @10am.
+
+5.Looking at the tables you have normalized. If you need to denormalize to improve query performance or speed up reporting, how would you carry out denormalization for this database design? Discuss potential strategies with your mentor.
+  Denormalization it seems would not need to be an all or nothing approach, by that I mean that a table would necessarily got to 0NF, it could simply mean a reduction from Boyce Codd to 2NF, or Boyce Codd to 1NF or 3NF to 2NF.  Depending on the level of efficiency sought and demands of space vs performance it would seem that most database scenarios would profit from some degree of normalization.  Hence this checkpoint :)  If I were to denormalize the work I just did, I would reduce to 2NF first, then 1NF the 0NF until the goal was achieved.
+
+Discuss the trade-offs between data normalization and denormalization in this scenario with your mentor.
+  In retrospect, I believe we discussed much of this at the meeting on 10-12-17 @10am but I did not even realize it yet... which you alluded to on the call.  Thanks for the discussion!
