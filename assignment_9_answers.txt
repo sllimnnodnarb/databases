@@ -1,0 +1,159 @@
+1.Explain a subquery in your own words.
+  A subquery is a nested SELECT inside of another SELECT statement.
+
+2.Where can you use a subquery within a SELECT statement?
+  "Where can you..." <- Pun intended?  Lol.  in the WHERE FROM or SELECT clause
+
+3.When would you employ a subquery?
+  If you want to query the results table of another query
+
+4.Explain a row constructor in your own words.
+  A ROW is a way to run a subquery using stated values for each column, but in the event that a NULL is retrieved if or even a single column, the result will be NULL instead of true.  ROW seems good for very specific searches where much information is already known about the desired data set.
+
+5.What happens if a row in the subquery result provides a NULL value to the comparison?
+  Accidentally already answered this in #4 ^
+
+6.What are the ways to use a subquery within a WHERE clause? If you can't remember them, do these flashcards until you can.
+  IF, NOT IN, ANY, SOME, ALL, EXISTS, NOT EXISTS
+
+7.Build an employees table and a shifts table with appropriate primary and foreign keys. Then, write queries to find the following information:
+  List all employees and all shifts.
+    SELECT employees.name, shifts.start, shifts.finish FROM employees, shifts WHERE employees.shift_id = shifts.id;
+      name   | start | finish
+      ---------+-------+--------
+      Adam    | 6am   | 6pm
+      Brandon | 6pm   | 6am
+      Cyle    | off   | off
+
+  Create a list of all possible schedules.
+    SELECT * FROM employees CROSS JOIN shifts;
+      id |  name   | shift_id | id | start | finish | employee_id
+      ----+---------+----------+----+-------+--------+-------------
+      1 | Adam    |       10 | 10 | 6am   | 6pm    |           1
+      1 | Adam    |       10 | 20 | 6pm   | 6am    |           2
+      1 | Adam    |       10 | 30 | off   | off    |           3
+      2 | Brandon |       20 | 10 | 6am   | 6pm    |           1
+      2 | Brandon |       20 | 20 | 6pm   | 6am    |           2
+      2 | Brandon |       20 | 30 | off   | off    |           3
+      3 | Cyle    |       30 | 10 | 6am   | 6pm    |           1
+      3 | Cyle    |       30 | 20 | 6pm   | 6am    |           2
+      3 | Cyle    |       30 | 30 | off   | off    |           3
+
+8.Given a dogs table, adoptions table, adopters table, and volunteers table , write queries to retrieve the following information. All tables are described below.
+  Create a list of all volunteers. If the volunteer is fostering a dog, include each dog as well.
+    SELECT volunteers.name, (SELECT adoptions.dog FROM adoptions WHERE adoptions.id = volunteers.foster_id) FROM volunteers;
+      name   |  dog
+      ---------+--------
+      Adam    | Rosco
+      Cyle    | Boujee
+      Brandon |
+
+  List the adopter’s name and the pet’s name for each animal adopted within the past month to be displayed as a ‘Happy Tail’ on social media.
+    SELECT adoptions.dog, (SELECT volunteers.name FROM volunteers WHERE volunteers.foster_id = adoptions.id) FROM adoptions WHERE id IS NOT NULL;
+      dog   | name
+      --------+------
+      Rosco  | Adam
+      Boujee | Cyle
+
+  Create a list of adopters who have not yet chosen a dog to adopt and generate all possible combinations of adopters and available dogs.
+    SELECT v.name AS not_adopted_yet, d.name AS needs_home FROM volunteers AS v, dogs AS d WHERE NOT EXISTS (SELECT adoptions.id FROM adoptions WHERE v.foster_id = adoptions.id) AND d.adoption_date IS NULL;
+      not_adopted_yet | needs_home
+      -----------------+------------
+      Brandon         | Ranger
+      (1 row)
+
+
+  Display a list of all cats and all dogs who have not been adopted.
+    SELECT c.name AS cat_not_adopted_yet, d.name AS dog_not_adopted_yet FROM cats AS c, dogs AS d WHERE c.adoption_date IS NULL AND d.adoption_date IS NULL;
+      cat_not_adopted_yet | dog_not_adopted_yet
+      ---------------------+---------------------
+      Seashell            | Ranger
+      Nala                | Ranger
+      (2 rows)
+
+
+  Create a list of volunteers who are available to foster. If they currently are fostering a dog, include the dog. Also include all dogs who are not currently in foster homes.
+    SELECT volunteers.name, (SELECT adoptions.dog FROM adoptions WHERE adoptions.id = volunteers.foster_id) FROM volunteers;
+      name   |  dog
+      ---------+--------
+      Adam    | Rosco
+      Cyle    | Boujee
+      Brandon |
+
+9.Write a query to find the name of the person who adopted Seashell given the tables cats, adoptions, and adopters. All tables are described below
+  SELECT DISTINCT v.name, a.cat  FROM volunteers AS v, cats AS c, adoptions AS a WHERE a.cat= 'Munchkin' AND a.id = v.foster_id;
+    name |   cat
+    ------+----------
+    Adam | Munchkin
+
+10.Given the tables books (isbn, title, author), transactions (id, checked_out_date, checked_in_date, user_id, isbn), holds (id, isbn, user_id, rank, date), and patrons (id, name, fine_amount), write queries to find the following information:
+  To discern if the library should buy more copies of a given book, please provide the names and position, in order, of all of the patrons waiting in line for Harry Potter and the Sorcerer’s Stone.
+    SELECT p.name AS hold_requestor, h.date AS on_date FROM patrons AS p, holds AS h GROUP BY p.name, h.date, h.isbn, p.id, h.user_id HAVING h.isbn = 123 AND p.id = h.user_id ORDER BY h.date DESC;
+       hold_requestor |  on_date
+      ----------------+------------
+       Bryan Smith    | 2017-02-01
+       Chad Smith     | 2017-01-11
+       Adam Smith     | 2017-01-01
+       Dexter Smith   | 2017-01-01
+      (4 rows)
+
+  Make a list of all book titles and denote whether or not a copy of that book is checked out.
+    SELECT b.title AS books_checked_out FROM books AS b, transactions AS t WHERE t.checked_in_date IS NULL;
+      books_checked_out
+      -------------------
+      (0 rows)
+
+  In an effort to learn which books take longer to read, the librarians would like you to create a list of total checked out time by book name in the past month.
+    SELECT b.title, t.checked_out_date, (SELECT t.checked_in_date - t.checked_out_date AS time_to_read) FROM books AS b, transactions AS t WHERE checked_out_date > date(timestamp '2017-10-01');
+      title | checked_out_date | time_to_read
+      -------+------------------+--------------
+      (0 rows)
+
+  In order to learn which items should be retired, make a list of all books that have not been checked out in the past 5 years.
+    SELECT  b.title, t.checked_in_date  FROM books AS b, transactions AS t WHERE t.checked_in_date <= date(timestamp '2012-10-13') AND t.isbn = 8982 AND t.isbn = b.isbn;
+                   title                | checked_in_date
+      ------------------------------------+-----------------
+      Designing Object-Oriented Software | 2010-06-08
+      (1 row)
+***Note: Although the questions asked for books that were "checked out", my query searches for "checked in" intentionally because I would submit that if a book is not possessing the status of 'checked in', then it must conversely be still 'checked' out.***
+
+  List all of the library patrons. If they have one or more books checked out, correspond the books to the patrons.
+    SELECT p.name,(SELECT b.title AS book_currently_checked_out FROM books AS b, transactions AS t WHERE b.isbn = t.isbn AND t.checked_in_date IS NULL) FROM patrons AS p;
+           name     | book_currently_checked_out
+      --------------+----------------------------
+       Adam Smith   |
+       Bryan Smith  |
+       Chad Smith   |
+       Dexter Smith |
+       Elgin Smith  |
+      (5 rows)
+
+11.Given the following tables in an airliner database, find the following information. airplanes (model, seat capacity, range), flights(flight_number, destination, origin, company, distance, flight_time, airplane_model), transactions(id, seats_sold, total_revenue, total_cost, flight_number, date)
+  To determine the most profitable airplanes, find all airplane models where each flight has had over 100 paying customers in the past month.
+    SELECT a.model, t.seats_sold FROM transactions AS t, airplanes AS a WHERE t.seats_sold > 100 AND t.flight_date > date(timestamp '2017-09-13') GROUP BY a.model, t.seats_sold  LIMIT 3;
+      model | seats_sold
+      -------+------------
+      B747  |        489
+      A380  |        302
+      B747  |        277
+      (3 rows)
+
+  To determine the most profitable flights, find all destination-origin pairs where 90% or more of the seats have been sold in the past month.
+    SELECT DISTINCT f.origin, f. destination, t.seats_sold FROM transactions AS t, airplanes AS a, flights AS f WHERE t.seats_sold >= a.seat_capacity *.9 AND t.flight_number = f.flight_number;
+         origin    | destination  | seats_sold
+      -------------+--------------+------------
+       Houston     | Auckland     |        489
+       San Antonio | Dallas       |        302
+       San Antonio | Los Angeles  |        277
+       San Antonio | Stephenville |          8
+      (4 rows)
+
+  The airline is looking to expand its presence in the US Southeast and globally. Find the total revenue of any flight arriving at or departing from Atlanta.
+    SELECT flights.origin, transactions.total_revenue FROM flights, transactions WHERE flights.origin = 'Atlanta' AND transactions.flight_number = flights.flight_number;
+       origin  | total_revenue
+      ---------+---------------
+       Atlanta |         69250
+      (1 row)
+
+12.Compare the subqueries you've written above. Compare them to the joins you wrote in Checkpoint 6. Which ones are more readable? Which were more logical to write?
+  The queries from this checkpoint were more logical, but on the other hand were more difficult for me to reason through in my own mind.  Practically, the time tradeoff between running a JOIN query vs a nested one would depend on the size of the database for me personally, if its a matter of milliseconds, then I would run the JOIN query and would end up being more productive, all things considered.  If the difference is longer than 3,4,5 minutes or so, then I would spend the time and energy to develop the nested query to be more productive.  Much of this I am sure is likely due to my inexperience with postgreSQL, so perhaps over time there will be no question as to how I might run the query, NESTED in most circumstances.
