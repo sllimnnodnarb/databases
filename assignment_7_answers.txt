@@ -15,7 +15,7 @@
   Work through the questions from the example above.
 
   Document any assumptions you make about what data should be stored, what data types should be used, etc., and include them in a text file.
-  Necessary columns including to create practical PK and FK to asociate a student with a class in the form of a student_record(transcript), see link to image below.
+  Necessary columns including to create practical PK and FK to associate a student with a class in the form of a student_record(transcript), see link to image below.
 
   Ask questions of your mentor if you are unsure about parts of your model.
 
@@ -31,7 +31,7 @@
     SELECT COUNT(DISTINCT course_grade) FROM grades WHERE course_name = 'Bloc';
 
   Find class names and the total number of students who have taken each class in the list.
-    SELECT SUM(attempt) AS total_enrollements, course_name FROM registrations GROUP BY course_name;
+    SELECT SUM(attempt) AS total_enrollments, course_name FROM registrations GROUP BY course_name;
 
   Find the class taken by the largest number of students.
     SELECT SUM(attempt) AS total_enrollments, registrations.course_name FROM registrations GROUP BY registrations.course_name  ORDER BY total_enrollments DESC LIMIT 1;
